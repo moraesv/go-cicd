@@ -7,7 +7,7 @@ jobs:
   VM:
     runs-on: ubuntu-latest
     steps:
-      # - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
       - name: Download a Build Artifact
         uses: actions/download-artifact@v4.1.8
