@@ -4,7 +4,7 @@ on:
   workflow_call:
 
 jobs:
-  EC2:
+  VM:
     runs-on: ubuntu-latest
     steps:
       - name: Download a Build Artifact
@@ -15,7 +15,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Deploy to Staging server
-        uses: easingthemes/ssh-deploy@main
+        uses: easingthemes/ssh-deploy@v5.1.0
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
