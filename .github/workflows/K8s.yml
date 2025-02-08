@@ -21,15 +21,26 @@ jobs:
           cluster_name: "alura-cluster"
           location: "us-east1"
 
-        # The KUBECONFIG env var is automatically exported and picked up by kubectl.
-      - id: "get-pods"
-        run: "kubectl get pods"
-
       - run: kubectl get svc
 
-      - run: kubectl create secret generic dbhost --from-literal=HOST=${{steps.URL.output.stdout}}
+      - run: kubectl delete secret dbhost --ignore-not-found
+      - run: kubectl create secret generic dbhost --from-literal=DBHOST=${{secrets.DBHOST}}
+
+      - run: kubectl delete secret dbport --ignore-not-found
       - run: kubectl create secret generic dbport --from-literal=DBPORT=${{secrets.DBPORT}}
-      - run: kubectl create secret generic dbuser --from-literal=USER=${{secrets.DBUSER}}
-      - run: kubectl create secret generic dbpassword --from-literal=PASSWORD=${{secrets.DBPASSWORD}}
+
+      - run: kubectl delete secret dbuser --ignore-not-found
+      - run: kubectl create secret generic dbuser --from-literal=DBUSER=${{secrets.DBUSER}}
+
+      - run: kubectl delete secret dbpassword --ignore-not-found
+      - run: kubectl create secret generic dbpassword --from-literal=DBPASSWORD=${{secrets.DBPASSWORD}}
+
+      - run: kubectl delete secret dbname --ignore-not-found
       - run: kubectl create secret generic dbname --from-literal=DBNAME=${{secrets.DBNAME}}
+
+      - run: kubectl delete secret port --ignore-not-found
       - run: kubectl create secret generic port --from-literal=PORT=8000
+
+      - run: kubectl apply -f infra-k8s/go.yaml
+
+      - run: kubectl set image deployment/go-api go=vmoraes26/go_ci:${{github.run_number}}

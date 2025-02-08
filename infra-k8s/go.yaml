@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: go-api
+  labels:
+    nome: go
+spec:
+  selector:
+    matchLabels:
+      nome: go
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        nome: go
+    spec:
+      containers:
+        - name: go
+          image: vmoraes26/go_ci:14
+          ports:
+            - containerPort: 8000
+          env:
+            - name: DBHOST
+              valueFrom:
+                secretKeyRef:
+                  name: dbhost
+                  key: DBHOST
+            - name: DBPORT
+              valueFrom:
+                secretKeyRef:
+                  name: dbport
+                  key: DBPORT
+            - name: DBUSER
+              valueFrom:
+                secretKeyRef:
+                  name: dbuser
+                  key: DBUSER
+            - name: PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: dbpassword
+                  key: PASSWORD
+            - name: DBNAME
+              valueFrom:
+                secretKeyRef:
+                  name: dbname
+                  key: DBNAME
+            - name: DBPORT
+              valueFrom:
+                secretKeyRef:
+                  name: port
+                  key: DBPORT
+          livenessProbe:
+            httpGet:
+              path: /vinicius
+              port: 8000
+            initialDelaySeconds: 60
+            periodSeconds: 5
+      restartPolicy: Always
