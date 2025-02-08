@@ -57,18 +57,12 @@ jobs:
     uses: ./.github/workflows/Docker.yml
     secrets: inherit
 
+  # deploy:
+  #   needs: build
+  #   uses: ./.github/workflows/Deploy.yml
+  #   secrets: inherit
+
   deploy:
-    needs: build
-    uses: ./.github/workflows/Deploy.yml
+    needs: docker
+    uses: ./.github/workflows/K8s.yml
     secrets: inherit
-
-  # Deploy_ECS:
-  #    needs: docker
-  #    uses: ./.github/workflows/ECS.yml
-  #    secrets: inherit
-
-  # LoadTest:
-  #    needs: docker
-  #    if: ${{ github.ref_name =='Homolog' }}
-  #    uses: ./.github/workflows/LoadTest.yml
-  #    secrets: inherit

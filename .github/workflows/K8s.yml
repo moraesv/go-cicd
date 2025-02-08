@@ -1,0 +1,39 @@
+name: kubernetes
+
+on:
+  workflow_call:
+
+jobs:
+  K8s:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: "read"
+      id-token: "write"
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - id: "auth"
+        uses: "google-github-actions/auth@v2"
+        with:
+          credentials_json: "${{ secrets.GCP_CREDENTIALS }}"
+
+      - id: "get-credentials"
+        uses: "google-github-actions/get-gke-credentials@v2"
+        with:
+          cluster_name: "alura-cluster"
+          location: "us-east1"
+
+        # The KUBECONFIG env var is automatically exported and picked up by kubectl.
+      - id: "get-pods"
+        run: "kubectl get pods"
+
+      - run: kubectl get svc
+
+      - run: kubectl create secret generic dbhost --from-literal=HOST=${{steps.URL.output.stdout}}
+      - run: kubectl create secret generic dbport --from-literal=DBPORT=${{secrets.DBPORT}}
+      - run: kubectl create secret generic dbuser --from-literal=USER=${{secrets.DBUSER}}
+      - run: kubectl create secret generic dbpassword --from-literal=PASSWORD=${{secrets.DBPASSWORD}}
+      - run: kubectl create secret generic dbname --from-literal=DBNAME=${{secrets.DBNAME}}
+      - run: kubectl create secret generic port --from-literal=PORT=8000
