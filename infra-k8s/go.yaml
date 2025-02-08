@@ -58,4 +58,11 @@ spec:
               port: 8000
             initialDelaySeconds: 60
             periodSeconds: 5
+          resources:
+            requests:
+              memory: "10Mi"
+              cpu: "64m"
+            limits:
+              memory: "20Mi"
+              cpu: "128m"
       restartPolicy: Always
