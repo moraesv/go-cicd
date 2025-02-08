@@ -37,11 +37,11 @@ spec:
                 secretKeyRef:
                   name: dbuser
                   key: DBUSER
-            - name: PASSWORD
+            - name: DBPASSWORD
               valueFrom:
                 secretKeyRef:
                   name: dbpassword
-                  key: PASSWORD
+                  key: DBPASSWORD
             - name: DBNAME
               valueFrom:
                 secretKeyRef:
